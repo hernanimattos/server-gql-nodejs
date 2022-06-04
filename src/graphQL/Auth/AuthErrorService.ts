@@ -15,21 +15,12 @@ export class AuthErrorService {
     mongoClient.$connect();
   }
   async execute({ email, type }: IErrorService) {
-    await mongoClient.$connect();
-
-    console.log('hahahahah');
-
-    const error = await mongoClient.errors.create({
+    await mongoClient.errors.create({
       data: {
         email,
         type,
       },
     });
-
-    console.log(
-      '🚀 ~ file: AuthErrorService.ts ~ line 16 ~ ErrosManager ~ execute ~ userErrorExists',
-      error
-    );
   }
 
   async errorQTD(email: string) {
