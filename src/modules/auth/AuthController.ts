@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
-import { AuthService } from './AuthService';
+import { AuthService } from './service/AuthService';
 
 export class AuthController {
   async execute(req: Request, res: Response) {
     const { body } = req || {};
 
-    const { username, password } = body || {};
+    const { email, password } = body || {};
 
     const authService = new AuthService();
-    const token = await authService.execute({ username, password });
+    const token = await authService.execute({ email, password });
 
     res.json(token);
   }

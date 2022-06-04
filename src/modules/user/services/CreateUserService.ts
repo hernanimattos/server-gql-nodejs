@@ -1,16 +1,15 @@
 import { postgressClient } from '../../../database/prismaClient';
 import { hash } from 'bcrypt';
-import { ErrorHandler } from 'src/modules/error/ErrorHandler';
+import { ErrorHandler } from '../../error/ErrorHandler';
 
 interface ICreateUser {
   name: string;
-  userName: string;
   email: string;
   password: string;
 }
 
 export class CreateUserService {
-  async execute({ name, userName, email, password }: ICreateUser) {
+  async execute({ name, email, password }: ICreateUser) {
     const userExists = await postgressClient.users.findFirst({
       where: {
         name: {
@@ -29,7 +28,6 @@ export class CreateUserService {
     return postgressClient.users.create({
       data: {
         name,
-        username: userName,
         email,
         password: hashedPassword,
       },

@@ -4,6 +4,10 @@ import { routes } from './router';
 import cors from 'cors';
 
 import { ErrorHandler } from './modules/error/ErrorHandler';
+import { graphqlHTTP } from 'express-graphql';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { importSchema } from 'graphql-import';
+import { resolvers } from './graphQL';
 
 const app = express();
 
@@ -13,9 +17,26 @@ app.use(cors());
 
 app.use(routes);
 
-app.get('/', (req, res) => {
-  res.send('deu cero');
+const typeDefs = importSchema('./src/graphQL/schema.graphql');
+
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
 });
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema,
+    graphiql: true,
+    customFormatErrorFn: (error: any) => {
+      const message = error.message.replace('Unexpected error value: ', '');
+      return {
+        message,
+      };
+    },
+  })
+);
+
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof ErrorHandler) {
     return res.status(400).json({
@@ -28,6 +49,6 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
+app.listen(4000, () => {
+  console.log('Server running on port 4000');
 });

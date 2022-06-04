@@ -1,5 +1,5 @@
 import { PrismaClient as PrismaClientMongo } from '../../prisma/generated/prismaMongo';
-import { PrismaClient as PrismaClientPostgress } from '../../prisma/generated/prismaPostgress';
+import { PrismaClient as PrismaClientPostgress } from '../../prisma/generated/prismaPostgres';
 
 const postgressClient = new PrismaClientPostgress({
   datasources: { db: { url: process.env.DATABASE_URL_POSTGRES } },

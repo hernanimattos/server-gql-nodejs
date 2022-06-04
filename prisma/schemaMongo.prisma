@@ -1,11 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-enum ErroType {
-  LOGIN
-  PASSWORD
-}
-
 generator client {
   provider = "prisma-client-js"
   output   = "./generated/prismaMongo"
@@ -18,8 +13,8 @@ datasource db {
 
 model Errors {
   id        String   @id @default(uuid()) @map("_id")
-  userId    String   @unique
-  type      ErroType
+  email     String   @unique
+  type      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
