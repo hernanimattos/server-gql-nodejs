@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+enum ErroType {
+  LOGIN
+  PASSWORD
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/prismaMongo"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL_MONGOBD")
+}
+
+model Errors {
+  id        String   @id @default(uuid()) @map("_id")
+  userId    String   @unique
+  type      ErroType
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+
+  @@map("errors")
+}

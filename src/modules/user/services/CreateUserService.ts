@@ -1,4 +1,4 @@
-import { prismaClient } from '@prismaClient/prismaClient';
+import { postgressClient } from '../../../database/prismaClient';
 import { hash } from 'bcrypt';
 import { ErrorHandler } from 'src/modules/error/ErrorHandler';
 
@@ -11,7 +11,7 @@ interface ICreateUser {
 
 export class CreateUserService {
   async execute({ name, userName, email, password }: ICreateUser) {
-    const userExists = await prismaClient.users.findFirst({
+    const userExists = await postgressClient.users.findFirst({
       where: {
         name: {
           mode: 'insensitive',
@@ -26,7 +26,7 @@ export class CreateUserService {
 
     const hashedPassword = await hash(password, 10);
 
-    return prismaClient.users.create({
+    return postgressClient.users.create({
       data: {
         name,
         username: userName,

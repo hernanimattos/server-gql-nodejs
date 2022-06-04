@@ -1,4 +1,4 @@
-import { prismaClient } from '@prismaClient/prismaClient';
+import { postgressClient, mongoClient } from '../../database/prismaClient';
 import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { ErrorHandler } from '../error/ErrorHandler';
@@ -9,7 +9,9 @@ interface IAuthUser {
 }
 export class AuthService {
   async execute({ username, password }: IAuthUser) {
-    const userExist = await prismaClient.users.findFirst({
+    await mongoClient.$connect();
+
+    const userExist = await postgressClient.users.findFirst({
       where: {
         username: {
           mode: 'insensitive',
