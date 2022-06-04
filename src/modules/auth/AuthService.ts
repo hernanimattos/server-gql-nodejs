@@ -16,10 +16,6 @@ export class AuthService {
         },
       },
     });
-    console.log(
-      '🚀 ~ file: AuthService.ts ~ line 18 ~ AuthService ~ execute ~ userExist',
-      userExist
-    );
 
     if (!userExist) {
       throw new ErrorHandler('User not found');
