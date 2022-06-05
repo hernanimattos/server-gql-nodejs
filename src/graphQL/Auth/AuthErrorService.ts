@@ -23,13 +23,13 @@ export class AuthErrorService {
     });
   }
 
-  async errorQTD(email: string) {
+  async errorQTD(email: string): Promise<any> {
     const error = mongoClient.errors.findMany({
       where: {
         email,
       },
     });
 
-    return (await error).length;
+    return (await error).length > 2 ? true : false;
   }
 }

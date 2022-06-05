@@ -3,13 +3,7 @@ import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { AuthErrorService } from './AuthErrorService';
 
-interface IResponse {
-  token: string;
-  error: string;
-  errrQtd: number;
-}
 export const authUser = async (_: any, args: any, ctx: any) => {
-  let errorQtd: number;
   const { email, password } = args.input;
 
   const checkError = new AuthErrorService();
@@ -22,24 +16,33 @@ export const authUser = async (_: any, args: any, ctx: any) => {
     },
   });
 
-  if (!userExist) {
-    await checkError.execute({ email, type: 'email' });
-    errorQtd = await checkError.errorQTD(email);
+  let blocked = await checkError.errorQTD(email);
+
+  if (blocked) {
     return {
       token: '',
-      error: 'Invalid password',
-      errorQtd,
+      message: 'Você excedeu o limite de tentativas de login',
+      blocked,
+    };
+  }
+
+  if (!userExist) {
+    await checkError.execute({ email, type: 'email' });
+
+    return {
+      token: '',
+      message: 'Usuário ou senha incorretos',
+      blocked,
     };
   }
   const isPasswordValid = await compare(password, userExist.password);
 
   if (!isPasswordValid) {
     await checkError.execute({ email, type: 'password' });
-    errorQtd = await checkError.errorQTD(email);
     return {
       token: '',
-      error: 'Invalid password',
-      errorQtd,
+      message: 'Usuário ou senha incorretos',
+      blocked,
     };
   }
 
@@ -47,7 +50,7 @@ export const authUser = async (_: any, args: any, ctx: any) => {
     token: sign({ email }, process.env.secret || 'xablau', {
       expiresIn: '1d',
     }),
-    error: 'Invalid password',
-    errorQtd: 0,
+    message: null,
+    blocked,
   };
 };

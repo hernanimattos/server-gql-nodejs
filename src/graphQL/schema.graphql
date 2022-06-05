@@ -21,8 +21,8 @@ type ID {
 
 type Token {
   token: String!
-  errorQtd: Int!
-  error: String
+  message: String!
+  blocked: Boolean!
 }
 
 type Query {
