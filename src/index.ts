@@ -10,7 +10,7 @@ import { importSchema } from 'graphql-import';
 import { resolvers } from './graphQL';
 
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 8080;
 app.use(express.json());
 
 app.use(cors());
