@@ -1,4 +1,4 @@
 {
-  "source": "/api/(.*)",
-  "desination": "/graphql"
+  "src": "/api/(.*)",
+  "dest": "/graphql"
 }
