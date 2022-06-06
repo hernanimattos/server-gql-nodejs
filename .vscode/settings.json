@@ -1,4 +1,0 @@
-{
-  "appService.defaultWebAppToDeploy": "/subscriptions/12ea7a12-80b7-4ea3-aa12-2d85ee236532/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/loja-app",
-  "appService.deploySubpath": "dist"
-}
