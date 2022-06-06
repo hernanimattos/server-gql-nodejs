@@ -12,7 +12,7 @@
     "build": " tsc --build tsconfig.json && yarn prisma:generate && yarn cpy && prisma:migrate && yarn node src/index.js",
     "prisma:generate": "prisma generate --schema prisma/schemaMongo.prisma && prisma generate --schema prisma/schemaPostgres.prisma",
     "prisma:migrate": "prisma migrate deploy --schema=prisma/schemaPostgres.prisma",
-    "cpy": "cp -R ./prisma ./api && cp ./src/graphQL/schema.graphql ./api/graphQL && cp ./package.json ./api && cp ./vercel.json ./api",
+    "cpy": "cp -R ./prisma ./dist && cp ./src/graphQL/schema.graphql ./dist/graphQL && cp ./package.json ./dist && cp ./vercel.json ./dist",
     "postgres:start": "docker-compose up -d",
     "vercel:build": "npm run prisma:generate && npm run prisma:migrate && tsc --build tsconfig.json && npm run cpy",
     "start": "node index.js"
