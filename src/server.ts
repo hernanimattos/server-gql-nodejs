@@ -17,7 +17,9 @@ app.use(cors());
 
 app.use(routes);
 
-const typeDefs = importSchema('./src/graphQL/schema.graphql');
+const typeDefs = importSchema(`${__dirname}/graphQL/schema.graphql`);
+
+console.log('Current directory:', __dirname);
 
 const schema = makeExecutableSchema({
   typeDefs,
@@ -49,6 +51,6 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-app.listen(8080, () => {
+app.listen(4000, () => {
   console.log('Server running on port 4000');
 });

@@ -7,10 +7,11 @@
     "dev": "ts-node-dev -r tsconfig-paths/register --exit-child --respawn --transpile-only --ignore-watch node_modules src/server.ts ",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": " tsc --build tsconfig.json && yarn prisma:generate && yarn cpy && prisma:migrate && yarn node src/server.js",
-    "prisma:generate": "yarn prisma generate --schema prisma/schemaMongo.prisma && yarn prisma generate --schema prisma/schemaPostgres.prisma",
-    "prisma:migrate": "prisma migrate dev --schema=prisma/schemaPostgres.prisma",
-    "cpy": "cp -R ./prisma ./dist && cp ./src/graphQL/schema.graphql ./dist/src/graphQL && cp ./package.json ./dist/package.json",
-    "postgres:start": "docker-compose up -d"
+    "prisma:generate": "prisma generate --schema prisma/schemaMongo.prisma && prisma generate --schema prisma/schemaPostgres.prisma",
+    "prisma:migrate": "prisma migrate deploy --schema=prisma/schemaPostgres.prisma",
+    "cpy": "cp -R ./prisma ./dist && cp ./src/graphQL/schema.graphql ./dist/graphQL && cp ./package.json ./dist/package.json",
+    "postgres:start": "docker-compose up -d",
+    "vercel:build": "npm run prisma:generate && npm run prisma:migrate && tsc --build tsconfig.json && npm run cpy"
   },
   "keywords": [],
   "author": "",
