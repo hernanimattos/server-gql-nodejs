@@ -16,7 +16,8 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "paths": {
-      "@prismaClient/*": ["./src/database/*"]
+      "@prismaClient/*": ["./src/database/*"],
+      "@gql-schema": ["./src/graphQL/schema.graphql"]
     }
   },
   "include": ["src/**/*"]

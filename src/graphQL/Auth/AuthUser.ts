@@ -2,6 +2,14 @@ import { postgressClient } from '../../database/prismaClient';
 import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { AuthErrorService } from './AuthErrorService';
+import { responseUserAuth } from './utils';
+
+enum ERROR_TYPE {
+  block = 'block',
+  notExist = 'notExist',
+  passwordInvalid = 'passwordInvalid',
+  success = 'success',
+}
 
 export const authUser = async (_: any, args: any, ctx: any) => {
   const { email, password } = args.input;
@@ -19,54 +27,22 @@ export const authUser = async (_: any, args: any, ctx: any) => {
   let blocked = await checkError.errorQTD(email);
 
   if (blocked) {
-    return {
-      token: '',
-      description: {
-        message: 'Você excedeu o limite de tentativas de login',
-        blocked,
-        error: true,
-        status: 'error',
-      },
-    };
+    return responseUserAuth(ERROR_TYPE.block);
   }
 
   if (!userExist) {
-    await checkError.execute({ email, type: 'email' });
-
-    return {
-      token: '',
-      description: {
-        message: 'Usuário ou senha incorretos',
-        blocked,
-        error: true,
-        status: 'error',
-      },
-    };
+    return responseUserAuth(ERROR_TYPE.notExist);
   }
   const isPasswordValid = await compare(password, userExist.password);
 
   if (!isPasswordValid) {
     await checkError.execute({ email, type: 'password' });
-    return {
-      token: '',
-      description: {
-        message: 'Usuário ou senha incorretos',
-        blocked,
-        error: true,
-        status: 'error',
-      },
-    };
+    return responseUserAuth(ERROR_TYPE.passwordInvalid);
   }
 
-  return {
-    token: sign({ email }, process.env.secret || 'xablau', {
-      expiresIn: '1d',
-    }),
-    description: {
-      message: 'Usuário autorizado',
-      blocked,
-      error: false,
-      status: 'success',
-    },
-  };
+  const token = sign({ email }, process.env.secret || 'xablau', {
+    expiresIn: '1d',
+  });
+
+  return responseUserAuth(ERROR_TYPE.success, token);
 };

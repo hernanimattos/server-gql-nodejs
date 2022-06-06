@@ -49,6 +49,6 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-app.listen(4000, () => {
+app.listen(8080, () => {
   console.log('Server running on port 4000');
 });

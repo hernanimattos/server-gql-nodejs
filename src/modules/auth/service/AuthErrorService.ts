@@ -1,4 +1,4 @@
-import { ErrorHandler } from 'src/modules/error/ErrorHandler';
+import { ErrorHandler } from '../../../modules/error/ErrorHandler';
 import { mongoClient } from '../../../database/prismaClient';
 
 enum ErroType {
