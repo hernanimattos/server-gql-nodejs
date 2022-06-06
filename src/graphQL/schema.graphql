@@ -19,10 +19,16 @@ type ID {
   id: ID!
 }
 
-type Token {
+type UserAuth {
   token: String!
+  description: Description
+}
+
+type Description {
   message: String!
+  error: Boolean!
   blocked: Boolean!
+  status: String!
 }
 
 type Query {
@@ -31,5 +37,5 @@ type Query {
 
 type Mutation {
   createUser(input: UserInput!): User!
-  authUser(input: Auth): Token!
+  authUser(input: Auth): UserAuth!
 }

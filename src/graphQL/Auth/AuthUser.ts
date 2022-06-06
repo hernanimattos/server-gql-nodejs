@@ -21,8 +21,12 @@ export const authUser = async (_: any, args: any, ctx: any) => {
   if (blocked) {
     return {
       token: '',
-      message: 'Você excedeu o limite de tentativas de login',
-      blocked,
+      description: {
+        message: 'Você excedeu o limite de tentativas de login',
+        blocked,
+        error: true,
+        status: 'error',
+      },
     };
   }
 
@@ -31,8 +35,12 @@ export const authUser = async (_: any, args: any, ctx: any) => {
 
     return {
       token: '',
-      message: 'Usuário ou senha incorretos',
-      blocked,
+      description: {
+        message: 'Usuário ou senha incorretos',
+        blocked,
+        error: true,
+        status: 'error',
+      },
     };
   }
   const isPasswordValid = await compare(password, userExist.password);
@@ -41,8 +49,12 @@ export const authUser = async (_: any, args: any, ctx: any) => {
     await checkError.execute({ email, type: 'password' });
     return {
       token: '',
-      message: 'Usuário ou senha incorretos',
-      blocked,
+      description: {
+        message: 'Usuário ou senha incorretos',
+        blocked,
+        error: true,
+        status: 'error',
+      },
     };
   }
 
@@ -50,7 +62,11 @@ export const authUser = async (_: any, args: any, ctx: any) => {
     token: sign({ email }, process.env.secret || 'xablau', {
       expiresIn: '1d',
     }),
-    message: null,
-    blocked,
+    description: {
+      message: 'Usuário autorizado',
+      blocked,
+      error: false,
+      status: 'success',
+    },
   };
 };
