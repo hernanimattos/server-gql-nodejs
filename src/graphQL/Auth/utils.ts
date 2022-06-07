@@ -26,23 +26,23 @@ export const responseUserAuth = (ERROR_TYPE: string, token?: string) => {
         error: true,
         status: 'error',
       },
-      emailInvalid: {
-        token: '',
-        description: {
-          message: 'E-mail inválido',
-          blocked: false,
-          error: true,
-          status: 'error',
-        },
+    },
+    emailInvalid: {
+      token: '',
+      description: {
+        message: 'E-mail inválido',
+        blocked: false,
+        error: true,
+        status: 'error',
       },
-      success: {
-        token,
-        description: {
-          message: 'Usuário autorizado',
-          blocked: false,
-          error: false,
-          status: 'success',
-        },
+    },
+    success: {
+      token,
+      description: {
+        message: 'Usuário autorizado',
+        blocked: false,
+        error: false,
+        status: 'success',
       },
     },
   };
