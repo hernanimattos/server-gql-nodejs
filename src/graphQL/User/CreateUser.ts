@@ -1,11 +1,12 @@
-import { postgressClient } from '../../database/prismaClient';
+import { Context } from '../../database/prismaClient';
 import { hash } from 'bcrypt';
 import { ErrorHandler } from '../../modules/error/ErrorHandler';
 
-export const createUser = async (_: any, args: any, ctx: any) => {
+export const createUser = async (_: any, args: any, ctx: Context) => {
   const { input } = args;
   const { name, email, password } = input;
-  const userExists = await postgressClient.users.findFirst({
+
+  const userExists = await ctx.prismaPostgress.users.findFirst({
     where: {
       name: {
         mode: 'insensitive',
@@ -20,7 +21,7 @@ export const createUser = async (_: any, args: any, ctx: any) => {
 
   const hashedPassword = await hash(password, 10);
 
-  return postgressClient.users.create({
+  return ctx.prismaPostgress.users.create({
     data: {
       name,
       email,

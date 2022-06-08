@@ -1,7 +1,7 @@
-import { postgressClient } from '../../database/prismaClient';
+import { Context } from '../../database/prismaClient';
 import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
-import { AuthErrorService } from './AuthErrorService';
+
 import { responseUserAuth } from './utils';
 
 enum ERROR_TYPE {
@@ -11,12 +11,40 @@ enum ERROR_TYPE {
   success = 'success',
 }
 
-export const authUser = async (_: any, args: any, ctx: any) => {
+interface IErrormanager {
+  email: string;
+  type: string;
+}
+
+const errorCreate = async (input: IErrormanager, ctx: Context) => {
+  ctx.prismaMongo.$connect();
+  const { email, type } = input;
+
+  ctx.prismaMongo.errors.create({
+    data: {
+      email,
+      type,
+    },
+  });
+  ctx.prismaMongo.$disconnect();
+};
+
+const errorQTD = async (email: string, ctx: Context) => {
+  ctx.prismaMongo.$connect();
+  const error = ctx.prismaMongo.errors.findMany({
+    where: {
+      email,
+    },
+  });
+  ctx.prismaMongo.$disconnect();
+
+  return (await error).length > 2 ? true : false;
+};
+
+export const authUser = async (_: any, args: any, ctx: Context) => {
   const { email, password } = args.input;
 
-  const checkError = new AuthErrorService();
-
-  const userExist = await postgressClient.users.findFirst({
+  const userExist = await ctx.prismaPostgress.users.findFirst({
     where: {
       email: {
         mode: 'insensitive',
@@ -24,7 +52,7 @@ export const authUser = async (_: any, args: any, ctx: any) => {
     },
   });
 
-  let blocked = await checkError.errorQTD(email);
+  let blocked = await errorQTD(email, ctx);
 
   if (blocked) {
     return responseUserAuth(ERROR_TYPE.block);
@@ -36,7 +64,7 @@ export const authUser = async (_: any, args: any, ctx: any) => {
   const isPasswordValid = await compare(password, userExist.password);
 
   if (!isPasswordValid) {
-    await checkError.execute({ email, type: 'password' });
+    await errorCreate({ email, type: 'password' }, ctx);
     return responseUserAuth(ERROR_TYPE.passwordInvalid);
   }
 

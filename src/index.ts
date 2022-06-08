@@ -9,6 +9,8 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import { importSchema } from 'graphql-import';
 import { resolvers } from './graphQL';
 
+import { context } from './database/prismaClient';
+
 const app = express();
 const port = process.env.PORT || 4000;
 app.use(express.json());
@@ -29,6 +31,7 @@ app.use(
   '/graphql',
   graphqlHTTP({
     schema,
+    context,
     graphiql: true,
     customFormatErrorFn: (error: any) => {
       const message = error.message.replace('Unexpected error value: ', '');
